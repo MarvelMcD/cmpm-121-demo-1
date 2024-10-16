@@ -51,11 +51,13 @@ smoothIncrementButton.textContent = "Start Continuous goobers";
 app.append(smoothIncrementButton);
 
 let isAnimating = false; 
-let lastFrameTime = performance.now(); 
+let lastFrameTime = performance.now();
+let growthRate = 1;
 smoothIncrementButton.addEventListener("click", toggleSmoothIncrement);
 
 function updateCounterDisplay() {
     counterDisplay.textContent = `${counter.toFixed(2)} goobers`;
+    purchaseUpgradeButton.disabled = counter < 10;
 }
 
 function toggleSmoothIncrement() {
@@ -82,10 +84,26 @@ function smoothIncrement(currentTime: number) {
     const elapsedTime = currentTime - lastFrameTime; 
     lastFrameTime = currentTime;
 
-    const incrementAmount = (elapsedTime / 1000);
+    const incrementAmount = (elapsedTime / 1000) * growthRate;
     counter += incrementAmount;
 
     updateCounterDisplay();
     requestAnimationFrame(smoothIncrement); 
+}
+
+const purchaseUpgradeButton = document.createElement("button");
+purchaseUpgradeButton.textContent = "Buy Growth Upgrade (10 goobers)";
+purchaseUpgradeButton.disabled = true;
+app.append(purchaseUpgradeButton);
+
+purchaseUpgradeButton.addEventListener("click", purchaseUpgrade);
+
+function purchaseUpgrade() {
+    if (counter >= 10) 
+    {
+        counter -= 10;
+        growthRate++; 
+        updateCounterDisplay();
+    }
 }
 
