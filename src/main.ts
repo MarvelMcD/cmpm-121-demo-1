@@ -10,5 +10,5 @@ header.innerHTML = gameName;
 app.append(header);
 
 const gooberButton = document.createElement("button");
-gooberButton.innerHTML = "goober 🫠";
+gooberButton.innerHTML = "🫠 goober 🫠";
 app.append(gooberButton);
