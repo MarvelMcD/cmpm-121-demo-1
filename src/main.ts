@@ -15,11 +15,33 @@ app.append(gooberButton);
 
 const counterDisplay = document.createElement("h2");
 let counter: number = 0;
-counterDisplay.innerHTML = counter.toString() + " goobers";
+counterDisplay.textContent = `${counter} goobers`;
 app.append(counterDisplay);
 
-gooberButton.addEventListener("click", function ()
-{
+gooberButton.addEventListener("click", incrementCounter);
+
+const autoClickButton = document.createElement("button");
+autoClickButton.textContent = "Start Auto Goober";
+app.append(autoClickButton);
+
+let autoClickInterval: number | null = null;
+
+autoClickButton.addEventListener("click", toggleAutoClick);
+
+function incrementCounter() {
     counter++;
-    counterDisplay.innerHTML = counter.toString() + " goobers";
-});
+    counterDisplay.textContent = `${counter} goobers`;
+}
+
+function toggleAutoClick() {
+    if (autoClickInterval !== null) {
+        clearInterval(autoClickInterval);
+        autoClickInterval = null;
+        autoClickButton.textContent = "Start Auto Goober";
+    } 
+    else 
+    {
+        autoClickInterval = setInterval(incrementCounter, 1000);
+        autoClickButton.textContent = "Stop Auto Goober";
+    }
+}
