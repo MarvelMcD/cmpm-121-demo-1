@@ -45,3 +45,47 @@ function toggleAutoClick() {
         autoClickButton.textContent = "Stop Auto Goober";
     }
 }
+
+const smoothIncrementButton = document.createElement("button");
+smoothIncrementButton.textContent = "Start Continuous goobers";
+app.append(smoothIncrementButton);
+
+let isAnimating = false; 
+let lastFrameTime = performance.now(); 
+smoothIncrementButton.addEventListener("click", toggleSmoothIncrement);
+
+function updateCounterDisplay() {
+    counterDisplay.textContent = `${counter.toFixed(2)} goobers`;
+}
+
+function toggleSmoothIncrement() {
+    if (isAnimating) 
+    {
+        isAnimating = false;
+        smoothIncrementButton.textContent = "Start Continuous goobers";
+    } 
+    else 
+    {
+        isAnimating = true;
+        lastFrameTime = performance.now();
+        requestAnimationFrame(smoothIncrement);
+        smoothIncrementButton.textContent = "Stop Continuous Goobers";
+    }
+}
+
+function smoothIncrement(currentTime: number) {
+    if (!isAnimating)
+    {
+        return;   
+    } 
+
+    const elapsedTime = currentTime - lastFrameTime; 
+    lastFrameTime = currentTime;
+
+    const incrementAmount = (elapsedTime / 1000);
+    counter += incrementAmount;
+
+    updateCounterDisplay();
+    requestAnimationFrame(smoothIncrement); 
+}
+
