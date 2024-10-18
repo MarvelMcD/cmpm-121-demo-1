@@ -54,27 +54,28 @@ function updateCounterDisplay() {
     updateStatusDisplays();
 }
 
-const autoClickButton = document.createElement("button");
-autoClickButton.textContent = "Start Auto Goober";
-app.append(autoClickButton);
+// code for single goober
+// const autoClickButton = document.createElement("button");
+// autoClickButton.textContent = "Start Auto Goober";
+// app.append(autoClickButton);
 
-let autoClickInterval: number | null = null;
+// let autoClickInterval: number | null = null;
 
-autoClickButton.addEventListener("click", toggleAutoClick);
+// autoClickButton.addEventListener("click", toggleAutoClick);
 
-function toggleAutoClick() {
-    if (autoClickInterval !== null) {
-        clearInterval(autoClickInterval);
-        autoClickInterval = null;
-        autoClickButton.textContent = "Start Auto Goober";
-    } else {
-        autoClickInterval = setInterval(() => incrementCounter(1), 1000);
-        autoClickButton.textContent = "Stop Auto Goober";
-    }
-}
+// function toggleAutoClick() {
+//     if (autoClickInterval !== null) {
+//         clearInterval(autoClickInterval);
+//         autoClickInterval = null;
+//         autoClickButton.textContent = "Start Single Auto Goober";
+//     } else {
+//         autoClickInterval = setInterval(() => incrementCounter(1), 1000);
+//         autoClickButton.textContent = "Stop Single Auto Goober";
+//     }
+// }
 
 const smoothIncrementButton = document.createElement("button");
-smoothIncrementButton.textContent = "Start Continuous Goobers";
+smoothIncrementButton.textContent = "Start Auto Goobers";
 app.append(smoothIncrementButton);
 
 let isAnimating = false;
@@ -85,12 +86,12 @@ smoothIncrementButton.addEventListener("click", toggleSmoothIncrement);
 function toggleSmoothIncrement() {
     if (isAnimating) {
         isAnimating = false;
-        smoothIncrementButton.textContent = "Start Continuous Goobers";
+        smoothIncrementButton.textContent = "Start Auto Goobers";
     } else {
         isAnimating = true;
         lastFrameTime = performance.now();
         requestAnimationFrame(smoothIncrement);
-        smoothIncrementButton.textContent = "Stop Continuous Goobers";
+        smoothIncrementButton.textContent = "Stop Auto Goobers";
     }
 }
 
