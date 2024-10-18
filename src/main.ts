@@ -54,7 +54,6 @@ function updateCounterDisplay() {
     updateStatusDisplays();
 }
 
-// Auto Click Button
 const autoClickButton = document.createElement("button");
 autoClickButton.textContent = "Start Auto Goober";
 app.append(autoClickButton);
@@ -110,22 +109,23 @@ function smoothIncrement(currentTime: number) {
 
 interface Upgrade {
     name: string;
-    cost: number;
-    rateIncrease: number;
-    count: number;
+    cost: number;         // current cost of the upgrade
+    baseCost: number;     
+    rateIncrease: number; 
+    count: number;        // times the upgrade has been purchased
 }
 
 const upgrades: Upgrade[] = [
-    { name: "Snoober Goober Upgrades", cost: 10, rateIncrease: 0.1, count: 0 },
-    { name: "Doober Goober Upgrades", cost: 100, rateIncrease: 2.0, count: 0 },
-    { name: "Uber Goober Upgrades", cost: 1000, rateIncrease: 50.0, count: 0 },
+    { name: "Snoober Goober Upgrades", cost: 10, baseCost: 10, rateIncrease: 0.1, count: 0 },
+    { name: "Doober Goober Upgrades", cost: 100, baseCost: 100, rateIncrease: 2.0, count: 0 },
+    { name: "Uber Goober Upgrades", cost: 1000, baseCost: 1000, rateIncrease: 50.0, count: 0 },
 ];
 
 const upgradeButtons: HTMLButtonElement[] = [];
 
 upgrades.forEach((upgrade) => {
     const button = document.createElement("button");
-    button.textContent = `Buy ${upgrade.name} (${upgrade.cost} goobers)`;
+    button.textContent = `Buy ${upgrade.name} (${upgrade.cost.toFixed(2)} goobers)`;
     button.disabled = true;
     button.addEventListener("click", () => purchaseUpgrade(upgrade));
     app.append(button);
@@ -137,6 +137,7 @@ function purchaseUpgrade(upgrade: Upgrade) {
         counter -= upgrade.cost;
         growthRate += upgrade.rateIncrease;
         upgrade.count++;
+        upgrade.cost = Math.round(upgrade.cost * 1.15);
         updateCounterDisplay();
     }
 }
@@ -145,5 +146,6 @@ function updateUpgradeButtons() {
     upgradeButtons.forEach((button, index) => {
         const upgrade = upgrades[index];
         button.disabled = counter < upgrade.cost;
+        button.textContent = `Buy ${upgrade.name} (${upgrade.cost.toFixed(2)} goobers)`; 
     });
 }
