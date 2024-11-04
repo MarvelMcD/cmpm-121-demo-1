@@ -35,24 +35,24 @@ app.append(purchasedItemsDisplay);
 
 interface Item {
     name: string;
-    cost: number; // current cost of the item
+    cost: number; 
     rate: number; 
-    count: number; // times the item has been purchased
+    count: number; 
     description: string;
     emoji: string;
 }
 
 const availableItems: Item[] = [
-    { name: "Goober Click Multiplier", cost: 50, rate: 1.25, count: 0, description: "Increaces the amount of goobers you get per click by 0.25x", emoji: "👆"},
-    { name: "Snoober Goober Upgrades", cost: 10, rate: 0.1, count: 0, description: "Well fed Goober collectors increase prduction 0.1x 🍲", emoji: "🍲"},
-    { name: "Doober Goober Upgrades", cost: 100, rate: 2.0, count: 0, description: "Improved housing for goobers increases prodoctivity 2x 🏠", emoji: "🏠"},
+    { name: "Goober Click Multiplier", cost: 50, rate: 1.25, count: 0, description: "Increases the amount of goobers you get per click by 0.25x", emoji: "👆"},
+    { name: "Snoober Goober Upgrades", cost: 10, rate: 0.1, count: 0, description: "Well fed Goober collectors increase production 0.1x 🍲", emoji: "🍲"},
+    { name: "Doober Goober Upgrades", cost: 100, rate: 2.0, count: 0, description: "Improved housing for goobers increases productivity 2x 🏠", emoji: "🏠"},
     { name: "Uber Goober Upgrades", cost: 1000, rate: 50.0, count: 0, description: "Well trained goobers 50x improvements 🏫", emoji: "🏫"},
     { name: "Gaba Goober", cost: 100000, rate: 1000.0, count: 0, description: "The Gaba Goober, the strongest of the Goobers 👑", emoji: "👑"},
 ];
 
 function updateStatusDisplays() {
     growthRateDisplay.textContent = `Growth Rate: ${growthRate.toFixed(2)} goobers/sec`;
-    purchasedItemsDisplay.innerHTML = ""; // clear
+    purchasedItemsDisplay.innerHTML = ""; 
 
     for (const item of availableItems) {
         const itemDisplay = document.createElement("p");
@@ -93,31 +93,53 @@ function toggleSmoothIncrement() {
     }
 }
 
+const UPGRADE_COST_MULTIPLIER = 1.15;
+const MILLISECONDS_IN_SECOND = 1000;
+
 function smoothIncrement(currentTime: number) {
     if (!isAnimating) return;
 
-    const elapsedTime = currentTime - lastFrameTime;
-    lastFrameTime = currentTime;
-
-    const incrementAmount = (elapsedTime / 1000) * growthRate;
-    counter += incrementAmount;
-
+    const elapsedTime = calculateElapsedTime(currentTime);
+    incrementCounterForTime(elapsedTime);
     updateCounterDisplay();
     requestAnimationFrame(smoothIncrement);
 }
 
-function purchaseUpgrade(item: Item) {
-    const upgradeCost = Math.round(item.cost * Math.pow(1.15, item.count));
-    if (counter >= upgradeCost) {
-        counter -= upgradeCost;
-        item.count++;
+function calculateElapsedTime(currentTime: number): number {
+    const elapsedTime = currentTime - lastFrameTime;
+    lastFrameTime = currentTime;
+    return elapsedTime;
+}
 
-        if (item.name === "Goober Multiplier") {
-            clickMultiplier *= item.rate;
-        } else {
-            growthRate += item.rate;
-        }
+function incrementCounterForTime(elapsedTime: number) {
+    const incrementAmount = (elapsedTime / MILLISECONDS_IN_SECOND) * growthRate;
+    counter += incrementAmount;
+}
+
+function purchaseUpgrade(item: Item) {
+    const upgradeCost = calculateUpgradeCost(item);
+    if (canAffordUpgrade(upgradeCost)) {
+        applyUpgrade(item, upgradeCost);
         updateCounterDisplay();
+    }
+}
+
+function calculateUpgradeCost(item: Item): number {
+    return Math.round(item.cost * Math.pow(UPGRADE_COST_MULTIPLIER, item.count));
+}
+
+function canAffordUpgrade(cost: number): boolean {
+    return counter >= cost;
+}
+
+function applyUpgrade(item: Item, cost: number) {
+    counter -= cost;
+    item.count++;
+
+    if (item.name === "Goober Multiplier") {
+        clickMultiplier *= item.rate;
+    } else {
+        growthRate += item.rate;
     }
 }
 
@@ -134,7 +156,7 @@ const upgradeButtons: HTMLButtonElement[] = availableItems.map(item => {
 function updateUpgradeButtons() {
     upgradeButtons.forEach((button, index) => {
         const item = availableItems[index];
-        const currentCost = Math.round(item.cost * Math.pow(1.15, item.count));
+        const currentCost = calculateUpgradeCost(item);
         button.disabled = counter < currentCost;
         button.textContent = `Buy ${item.name} (${currentCost.toFixed(2)} goobers)`; 
     });
