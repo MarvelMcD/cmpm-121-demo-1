@@ -23,8 +23,27 @@ app.append(counterDisplay);
 let clickMultiplier: number = 1;
 
 gooberButton.addEventListener("click", () => {
+
     incrementCounter(1 * clickMultiplier);
+
+    const gooberEmoji = document.createElement("span");
+    gooberEmoji.textContent = "🫠";  
+    gooberEmoji.classList.add("goober-emoji");
+    gooberEmoji.style.position = "absolute";
+    gooberEmoji.style.left = `${gooberButton.getBoundingClientRect().left + window.scrollX + 10}px`;
+    gooberEmoji.style.top = `${gooberButton.getBoundingClientRect().top + window.scrollY + 10}px`;
+
+    document.body.appendChild(gooberEmoji);
+
+    requestAnimationFrame(() => {
+        gooberEmoji.classList.add("goober-movement"); 
+    });
+
+    setTimeout(() => {
+        gooberEmoji.remove();
+    }, 3000);
 });
+
 
 const growthRateDisplay = document.createElement("p");
 growthRateDisplay.textContent = `Growth Rate: ${growthRate.toFixed(2)} goobers/sec`;
