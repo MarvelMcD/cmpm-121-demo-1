@@ -30,8 +30,8 @@ gooberButton.addEventListener("click", () => {
     gooberEmoji.textContent = "🫠";  
     gooberEmoji.classList.add("goober-emoji");
     gooberEmoji.style.position = "absolute";
-    gooberEmoji.style.left = `${gooberButton.getBoundingClientRect().left + window.scrollX + 10}px`;
-    gooberEmoji.style.top = `${gooberButton.getBoundingClientRect().top + window.scrollY + 10}px`;
+    gooberEmoji.style.left = `${gooberButton.getBoundingClientRect().left + window.scrollX + 50}px`;
+    gooberEmoji.style.top = `${gooberButton.getBoundingClientRect().top + window.scrollY - 45}px`;
 
     document.body.appendChild(gooberEmoji);
 
@@ -41,7 +41,7 @@ gooberButton.addEventListener("click", () => {
 
     setTimeout(() => {
         gooberEmoji.remove();
-    }, 3000);
+    }, 1000);
 });
 
 
